@@ -1,16 +1,32 @@
 package edu.kvcc.cis298.cis298assignment4;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+
+import edu.kvcc.cis298.cis298assignment4.fragments.BeverageListFragment;
 
 /**
- * Created by David Barnes on 11/3/2015.
+ * Created by doc on 11/1/16.
  */
-public class BeverageListActivity extends SingleFragmentActivity {
 
-    //Since this activity inherits from singleFragmentActivity, the only work we have to do
-    //is override this createFragment method and return a new BeverageListFragment
+public class BeverageListActivity extends FragmentActivity {
     @Override
-    protected Fragment createFragment() {
-        return new BeverageListFragment();
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_fragment);
+
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
+
+        // if the fragment container is null, fill it with the BeverageListFragment
+        if (fragment == null) {
+            fragment = new BeverageListFragment();
+            fm.beginTransaction()
+                    .add(R.id.fragment_container, fragment)
+                    .commit();
+        }
     }
 }

@@ -1,118 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:id="@+id/fragment_beverage">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:text="@string/beverage_name" />
+        android:layout_gravity="center_horizontal"
+        android:text="@string/fragment_beverage_name"
+        android:textSize="24sp"/>
 
     <EditText
-        android:id="@+id/beverage_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/beverage_name_hint"
-        android:inputType="text"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:padding="4dp" />
+        android:id="@+id/fragment_beverage_edit_name"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:layout_weight="0.5"
-            android:text="@string/beverage_id" />
+            android:text="ID:"
+            android:textSize="18sp"
+            android:layout_alignParentLeft="true"/>
 
         <EditText
-            android:id="@+id/beverage_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="@string/beverage_id_hint"
-            android:inputType="text"
-            android:textSize="24sp"
-            android:layout_weight="0.5"
-            android:padding="4dp" />
+            android:layout_alignParentRight="true"
+            android:id="@+id/fragment_beverage_edit_id"
+            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp"
+            android:inputType="none"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:layout_weight="0.5"
-            android:text="@string/beverage_pack" />
+            android:text="Pack:"
+            android:textSize="18sp"
+            android:layout_alignParentLeft="true"/>
+        
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:id="@+id/fragment_beverage_edit_pack"
+            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price:"
+            android:textSize="18sp"
+            android:layout_alignParentLeft="true"/>
 
         <EditText
-            android:id="@+id/beverage_pack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="@string/beverage_pack_hint"
-            android:layout_weight="0.5"
-            android:inputType="text"
-            android:textSize="24sp"
-            android:padding="4dp" />
+            android:layout_alignParentRight="true"
+            android:id="@+id/fragment_beverage_edit_price"
+            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp"
+            android:inputType="numberDecimal"/>
 
-        </LinearLayout>
+    </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:layout_weight="0.5"
-            android:text="@string/beverage_price" />
-
-        <EditText
-            android:id="@+id/beverage_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="@string/beverage_price_hint"
-            android:inputType="numberDecimal"
-            android:textSize="24sp"
-            android:layout_weight="0.5"
-            android:padding="4dp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:layout_weight="0.5"
-            android:text="@string/beverage_active" />
+            android:text="Active:"
+            android:textSize="18sp"
+            android:layout_alignParentLeft="true"/>
 
         <CheckBox
-            android:id="@+id/beverage_active"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:padding="4dp" />
+            android:id="@+id/fragment_beverage_checkbox_active"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp"/>
 
-        </LinearLayout>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/beverage_fragment_select_contact_button"
+        android:text="@string/select_contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/beverage_fragment_send_email"
+        android:text="@string/send_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

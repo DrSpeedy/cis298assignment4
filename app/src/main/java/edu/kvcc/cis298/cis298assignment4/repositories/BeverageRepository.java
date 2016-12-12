@@ -2,16 +2,19 @@ package edu.kvcc.cis298.cis298assignment4.repositories;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
+import android.util.Log;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.kvcc.cis298.cis298assignment4.R;
+import cz.msebera.android.httpclient.Header;
 import edu.kvcc.cis298.cis298assignment4.models.Beverage;
 
 /**
@@ -51,29 +54,43 @@ public class BeverageRepository extends AbstractBeverageRepository {
         reloadBeverages();
     }
 
-    /**
-     * Read in tokens and build beverage models from them to store
-     * in the repository's mapped collection
-     */
     public void reloadBeverages() {
-        Resources resources = getContext().getResources();
-        InputStream inputStream = resources.openRawResource(R.raw.beverage_list);
+        mBusy = true;
+        final AsyncHttpClient client = new AsyncHttpClient();
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String line;
-        try {
-            while ((line = reader.readLine()) != null) {
-                if (!line.isEmpty()) {
-                    String[] tokens = line.split(",");
-                    Beverage beverage = Beverage.fromTokens(tokens);
-                    if (beverage != null) {
-                        put(beverage.getItemNumber(), beverage);
+        client.get("http://barnesbrothers.homeserver.com/beverageapi/", new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                Log.v(TAG, "onSuccess()");
+                String jsonString = new String(responseBody);
+                Log.i(TAG, jsonString);
+                try {
+                    JSONArray jsonArray = new JSONArray(jsonString);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        String itemNumber = jsonObject.getString("id");
+                        String description = jsonObject.getString("name");
+                        String pack = jsonObject.getString("pack");
+                        double price = jsonObject.getDouble("price");
+                        boolean active = jsonObject.getInt("isActive") != 0;
+
+                        Beverage beverage = new Beverage(itemNumber, description, pack, price, active);
+                        put(itemNumber, beverage);
                     }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+
+                mBusy = false;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Log.v(TAG, "onFailure()");
+                mBusy = false;
+            }
+        });
     }
 
     @Override

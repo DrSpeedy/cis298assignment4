@@ -10,6 +10,7 @@ import edu.kvcc.cis298.cis298assignment4.models.Beverage;
 
 public abstract class AbstractBeverageRepository implements MappedRepository<String, Beverage> {
     private Context mContext;
+    protected boolean mBusy;
 
     AbstractBeverageRepository(Context context) {
         mContext = context;
@@ -20,4 +21,8 @@ public abstract class AbstractBeverageRepository implements MappedRepository<Str
     }
 
     public abstract void reloadBeverages();
+
+    public boolean isBusy() {
+        return mBusy;
+    }
 }

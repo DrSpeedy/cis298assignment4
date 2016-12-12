@@ -1,6 +1,12 @@
 package edu.kvcc.cis298.cis298assignment4.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -8,6 +14,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -28,11 +35,16 @@ public class BeverageFragment extends Fragment {
     // Key to fetch the itemNumber option from the bundled arguments
     private static final String ARG_ITEM_NUMBER = "item_number";
 
+    // Request codes of on activity result
+    private static final int REQUEST_CONTACT = 0;
+
     // Repository instance that holds all beverage information
     private AbstractBeverageRepository mBeverageRepository;
 
     // Beverage model
     private Beverage mBeverage;
+    private Button mSelectContactButton;
+    private Button mSendDetailsButton;
 
     /**
      * Create a new beverage fragment
@@ -95,7 +107,89 @@ public class BeverageFragment extends Fragment {
         editPrice.setText(String.valueOf(mBeverage.getCasePrice()));
         checkBoxActive.setChecked(mBeverage.isActive());
 
+        // Allow the user to select a contact from their phone
+        final Intent pickContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        mSelectContactButton = (Button) view.findViewById(R.id.fragment_beverage_select_contact_button);
+        mSelectContactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(pickContact, REQUEST_CONTACT);
+            }
+        });
+
+        // If there is no default app to pick contacts, disable the button
+        PackageManager packageManager = getActivity().getPackageManager();
+        if (packageManager.resolveActivity(pickContact, PackageManager.MATCH_DEFAULT_ONLY) == null) {
+            mSelectContactButton.setEnabled(false);
+        }
+
+        mSendDetailsButton = (Button) view.findViewById(R.id.fragment_beverage_send_email);
+        mSendDetailsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+
+                intent.putExtra(Intent.EXTRA_TEXT, getBeverageReport());
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.beverage_report_subject));
+                //intent.putExtra(Intent.EXTRA_EMAIL, )
+
+                // Prompt the user as to which app to use this data with
+                intent = Intent.createChooser(intent, getString(R.string.send_report));
+                startActivity(intent);
+            }
+        });
+
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // If the result is not ok, return
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        if (requestCode == REQUEST_CONTACT && data != null) {
+            Uri contactUri = data.getData();
+
+            // List out only the DisplayName field
+            String[] queryFields = new String[] {
+                    ContactsContract.Contacts.DISPLAY_NAME
+            };
+            Cursor cursor = getActivity().getContentResolver().query(contactUri, queryFields, null, null, null);
+            try {
+                // If there are no results, return
+                if (cursor.getCount() == 0) {
+                    return;
+                }
+
+                cursor.moveToFirst();
+
+                // Using 0 as the column because DISPLAY_NAME is the only thing
+                // being returned by the query
+                String contact = cursor.getString(0);
+                mSelectContactButton.setText(contact);
+
+            } finally {
+                cursor.close();
+            }
+        }
+    }
+
+    private String getBeverageReport() {
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(mSelectContactButton.getText())
+                .append(",\n\n")
+                .append("Please review the following beverage.\n\n")
+                .append(mBeverage.getItemNumber() + "\n")
+                .append(mBeverage.getItemDescription() + "\n")
+                .append(mBeverage.getPackSize() + "\n")
+                .append(mBeverage.getCasePrice() + "\n")
+                .append(mBeverage.isActive() ? "Active" : "Not Active");
+
+        return builder.toString();
     }
 
     /**

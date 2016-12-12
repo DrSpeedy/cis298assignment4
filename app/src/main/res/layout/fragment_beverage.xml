@@ -106,13 +106,13 @@
     </RelativeLayout>
 
     <Button
-        android:id="@+id/beverage_fragment_select_contact_button"
+        android:id="@+id/fragment_beverage_select_contact_button"
         android:text="@string/select_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/beverage_fragment_send_email"
+        android:id="@+id/fragment_beverage_send_email"
         android:text="@string/send_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

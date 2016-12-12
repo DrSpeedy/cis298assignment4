@@ -68,14 +68,7 @@ public class BeverageListFragment extends Fragment {
 
         // Wait for the repository to load data...
         Log.i(TAG, "Sleeping...");
-
-        // In a pinch. I'm sure there is a much better way to wait for the repo
-        // but I simply do not have time to keep messing with it.
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // TODO: Do something to wait if the repo is busy...
         Log.i(TAG, "Waking...");
 
         ArrayList<Beverage> beverages = new ArrayList<>(repository.getAll().values());

@@ -89,7 +89,7 @@ The application must do all of the above work to get the extra credit. In order 
 
 ## Known Problems, Issues, And/Or Errors in the Program
 - UI nad networking are not synced together propperly. (UI will not update with the beverage repo, rotate your screen to fix)
-- Implicit intents are not set up as of yet (12/11/16)...
+- Implicit intent does not autofill email
 
 
 # Original Assignment README

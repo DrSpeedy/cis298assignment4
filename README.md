@@ -1,8 +1,7 @@
 # Assignment 4 - Add Implicit Intents and HTTP data loading to Beverage app.
 ## Due 12-12-2016
 ## Author
-
-
+Brian Wilson
 
 ## Description
 
@@ -85,11 +84,12 @@ Setup a SQLite database to maintain the information for the Beverages. When the 
 The application must do all of the above work to get the extra credit. In order to satisfy the web service grading part of the assignment, the application must either load the Beverage data from the web service when the application starts up (no database), or load the Beverage data when the database is created (with database). If there is no web service functionality for one of those two features, then you can not get any points for that section of grading.
 
 ## Outside Resources Used
-
+[Android Async Http Client Library](http://loopj.com/android-async-http/)
 
 
 ## Known Problems, Issues, And/Or Errors in the Program
-
+- UI nad networking are not synced together propperly. (UI will not update with the beverage repo, rotate your screen to fix)
+- Implicit intents are not set up as of yet (12/11/16)...
 
 
 # Original Assignment README

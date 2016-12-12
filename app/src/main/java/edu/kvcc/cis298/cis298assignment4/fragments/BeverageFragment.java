@@ -46,6 +46,9 @@ public class BeverageFragment extends Fragment {
     private Button mSelectContactButton;
     private Button mSendDetailsButton;
 
+    private String mContactName;
+    private String mContactEmail;
+
     /**
      * Create a new beverage fragment
      * @param itemNumber item number of the beverage we'd like to edit
@@ -127,15 +130,13 @@ public class BeverageFragment extends Fragment {
         mSendDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
+                // Send an email to the selected contact
+                Uri uri = Uri.fromParts("mailto", mContactEmail == null ? "no@email.provided" : mContactEmail, null);
+                Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
 
                 intent.putExtra(Intent.EXTRA_TEXT, getBeverageReport());
                 intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.beverage_report_subject));
-                //intent.putExtra(Intent.EXTRA_EMAIL, )
 
-                // Prompt the user as to which app to use this data with
-                intent = Intent.createChooser(intent, getString(R.string.send_report));
                 startActivity(intent);
             }
         });
@@ -156,6 +157,7 @@ public class BeverageFragment extends Fragment {
             // List out only the DisplayName field
             String[] queryFields = new String[] {
                     ContactsContract.Contacts.DISPLAY_NAME
+                    //ContactsContract.CommonDataKinds.Email.ADDRESS
             };
             Cursor cursor = getActivity().getContentResolver().query(contactUri, queryFields, null, null, null);
             try {
@@ -166,10 +168,11 @@ public class BeverageFragment extends Fragment {
 
                 cursor.moveToFirst();
 
-                // Using 0 as the column because DISPLAY_NAME is the only thing
-                // being returned by the query
-                String contact = cursor.getString(0);
-                mSelectContactButton.setText(contact);
+                // Using the same indices as from queryFields
+                mContactName = cursor.getString(0);
+                //mContactEmail = cursor.getString(1);
+
+                mSelectContactButton.setText(mContactName);
 
             } finally {
                 cursor.close();
@@ -180,7 +183,7 @@ public class BeverageFragment extends Fragment {
     private String getBeverageReport() {
 
         StringBuilder builder = new StringBuilder();
-        builder.append(mSelectContactButton.getText())
+        builder.append(mContactName)
                 .append(",\n\n")
                 .append("Please review the following beverage.\n\n")
                 .append(mBeverage.getItemNumber() + "\n")
